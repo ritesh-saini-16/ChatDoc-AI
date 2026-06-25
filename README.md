@@ -268,7 +268,7 @@ ChatDoc-AI
 Clone the repository:
 
 ```bash
-git clone https://github.com/Shikha-9125/ChatDoc-AI.git
+git clone https://github.com/ritesh-saini-16/ChatDoc-AI.git
 ```
 
 Move into the project directory:
