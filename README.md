@@ -14,7 +14,6 @@ An AI-powered document assistant that enables users to upload PDFs, DOC files, a
 - 📁 Rename/Delete Files
 - 📦 Export Chats
 - 🔁 Reset Conversation
-- 🔊 Text-to-Speech Support
 - 🌙 Light/Dark Theme Toggle
 - 🤝 Real-Time Collaboration
 - 📱 Fully Responsive Design
@@ -372,7 +371,7 @@ vercel
 
 ## 👩‍💻 Author
 
-### Shikha Gupta
+### RITESH SAINI
 
 Final Year Electrical Engineering Student  
 Dr. B.R. Ambedkar National Institute of Technology
@@ -389,14 +388,6 @@ Dr. B.R. Ambedkar National Institute of Technology
 - OpenAI APIs
 
 ### Connect With Me
-
-GitHub:
-https://github.com/Shikha-9125
-
-LinkedIn:
-https://linkedin.com/in/shikha-gupta
-
----
 
 ## ⭐ Support
 
