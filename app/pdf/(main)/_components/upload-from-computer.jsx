@@ -14,7 +14,6 @@ function UploadFromComputer({ user, onClose }) {
   const [isUploading, setIsUploading] = useState(false);
   const [progress, setProgress] = useState(0);
   const router = useRouter();
-  const [promiseMessage, setPromiseMessage] = useState("Data extracting...");
   const { edgestore } = useEdgeStore();
 
   const onUploading = () => {
@@ -35,13 +34,15 @@ function UploadFromComputer({ user, onClose }) {
     setIsUploading(true);
     const newPromise = new Promise(async (resolve, reject) => {
       try {
+        console.log("Uploading file to EdgeStore...");
         const res = await edgestore.publicFiles.upload({
           file: file,
           onProgressChange: (progress) => {
-            console.log(progress);
+            console.log("Upload progress:", progress);
             setProgress(progress);
           },
         });
+        console.log("EdgeStore upload complete:", res);
 
         const postData = {
           pdfName: file.name,
@@ -53,15 +54,19 @@ function UploadFromComputer({ user, onClose }) {
           idPublished: false,
         };
 
+        console.log("Saving to Firestore...");
         const refDoc = collection(db, `${user.email}/files/pdf`);
         const response = await addDoc(refDoc, postData);
+        console.log("Firestore save complete:", response.id);
 
         const bodyData = {
           pdfURL: res.url,
           pageNo: 1,
         };
 
+        console.log("Calling initial upload API...");
         const { data } = await axios.post("/api/initial-upload-pdf", bodyData);
+        console.log("Initial API response:", data);
 
         await addDoc(collection(db, `${user?.email}/files/pdf/${response.id}/chats`), {
           text: data,
@@ -70,20 +75,22 @@ function UploadFromComputer({ user, onClose }) {
           name: "Chat AI",
           sender: false,
         });
+        console.log("Added initial chat to Firestore");
 
         onClose();
         setIsUploading(false);
         router.push(`/pdf/${response.id}`);
         resolve(response.id);
       } catch (error) {
+        console.error("Upload failed:", error);
         setIsUploading(false);
-        reject("Failed upload...");
+        reject(`Upload failed: ${error.message}`);
       }
     });
 
     toast.promise(newPromise, {
       success: "File uploaded successfully!",
-      error: "Upload failed...",
+      error: (err) => err || "Upload failed...",
       loading: "File uploading",
     });
   };
@@ -107,7 +114,7 @@ function UploadFromComputer({ user, onClose }) {
         />
       </div>
       <div className="flex justify-end gap-3">
-        <Button variant="flat" color="danger">
+        <Button variant="flat" color="danger" onClick={onClose}>
           Cancel
         </Button>
         <Button
